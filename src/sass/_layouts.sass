@@ -1,0 +1,39 @@
+.popup-more
+	display: none
+	position: fixed
+	top: 50%
+	left: 50%
+	min-width: 100%
+	min-height: 100%
+	z-index: 6000
+	transform: translate(-50%,-50%)
+	background-color: rgba(0, 0, 0, 0.7)
+	overflow: hidden
+	&__in
+		position: relative
+		min-width: 100%
+		min-height: 1500px
+	&__content
+		position: absolute
+		top: 50%
+		left: 50%
+		z-index: 6001
+		transform: translate(-50%,-50%)
+		width: 1000px
+		min-height: 425px
+	&__close
+		position: relative
+		width: 100%
+		text-align: right
+		button
+			position: absolute
+			right: -50px
+			top: -60px
+			background-color: transparent
+			color: white
+			&::before
+				content: '\2612'
+				font-size: 40px
+.is-counter
+.is-open
+	display: block

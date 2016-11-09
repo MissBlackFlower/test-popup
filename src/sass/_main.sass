@@ -1,0 +1,70 @@
+$gray: #f8f8f8
+
+.tabs
+	width: 100%
+	margin-top: 30px
+	&__item
+		display: inline-block
+		margin: 0 20px
+	&__btn
+		text-decoration: none
+		text-transform: uppercase
+		font-weight: bold
+		letter-spacing: 2px
+		line-height: 50px
+		padding: 10px 30px
+		border: 2px solid orange
+		color: black
+	.is-active
+		background-color: orange
+
+.tab-content
+	width: 100%
+	position: relative
+	h4
+		font-size: 20px
+	&__bl
+		display: none
+		margin-top: -7px
+		padding: 50px 0
+		background-color: orange
+	&__slide
+		width: 208px
+		display: inline-block
+		padding: 6px 4px
+		margin: 0 44px
+		background-color: black
+		color: white
+	&__btn
+		display: inline-block
+		width: 100%
+		text-transform: uppercase
+		text-decoration: none
+		line-height: 40px
+		font-weight: bolder
+		color: orange
+	.slick-slide
+		img
+			display: inline-block
+	.slick-prev,
+	.slick-next
+		top: 10px
+		left: -40px
+		width: 40px
+		height: 100%
+		text-align: center
+		background-color: transparent
+		font-weight: bold
+		&:before
+			display: inline-block
+			padding: 0 5px
+			color: orange
+			border: 1px solid black
+	.slick-next
+		left: auto
+		right: -40px
+	.slick-prev:before
+		content: "\27A4"
+		transform: rotate(180deg)
+	.slick-next:before
+		content: "\27A4"
