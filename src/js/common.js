@@ -1,6 +1,5 @@
 $(document).ready(function() {
 
-
 	var tab = $('.js-tab'),
 			tabBl = $('.js-bl'),
 			slide = $('.js-slide'),
@@ -8,85 +7,92 @@ $(document).ready(function() {
 			btnClose = $('.js-close'),
 			popup = $('.js-popup-more'),
 			popupSlider = $('.js-popup-slider'),
-			popupSlide = $('.js-popup-slider');
+			popupSlide = $('.js-popup-slide'),
+			count = $('.js-count');
+	var index = 1;
 
-	function hideShow(allBl, blActive, allTab, tabActive) {
-			allBl.hide();
-			blActive.fadeIn();
-			allTab.removeClass('is-active');
-			tabActive.addClass('is-active');
-	};
+	HideShow(tabBl, tabBl.first(), tab, tab.first() );
+	OnSlick(tabBl.first(), 2 , 0);
+	tabBl.first().attr('status', 'clicked');
 
-
-	tab.on('click', function() {
+	tab.on('click', function(e, slick) {
 		var blActive = tabBl.filter('[data-number="' + $(this).data("tab") + '"]');
 
-				hideShow(tabBl, blActive, tab, $(this) );
+		if ( $(this).attr('status') != 'clicked') {
+			if (popupSlider.hasClass('slick-initialized')) {
 
-				if (!(blActive.hasClass('slick-initialized'))) {
-					blActive.slick({
-						slidesToShow: 2,
-						slidesToScroll: 1,
-						arrows: true,
-						dots: false,
-						autoplay: false,
-					});
-				}
-	});
+					popupSlider.slick('unslick');
+					popupSlider.empty();
+			}
+			tab.removeAttr( "status" );
+			$(this).attr('status', 'clicked');
 
-	btnMore.on('mousedown', function() {
-		var currentTab = tabBl.has($(this));
-		// console.log(currentTab);
-
-		$.getJSON('data.json', function(data) {
-			$.each(data, function(i, obj) {
-				if ( (tabBl.data("number") == obj.tab) && (popupSlider.has(popupSlide)) ) {
-					console.log((popupSlider.has(popupSlide)));
-					var ul = [];
-					var list = obj.list;
-
-					for (var txt in list) {
-						var li = ("<li>"+ list[txt] +"</li>");
-						console.log(li);
-						ul.push(li);
-					};
-					console.log(i);
-					popupSlider.append("<div class='popup-slider__item .js-slide'><div class='popup-slider__txt'><h4>"+ obj.title +"</h4><ul>"+ ul.join('') +"</ul><p>"+ obj.paragraph +"</p><span>"+ obj.date +" "+ obj.author +"</span></div><div class='popup-slider__img'><img src='"+ obj.url +"' alt='"+ obj.alt +"' width='300' height='375'/></div></div>");
-				};
-			});
-		});
-	});
-
-	btnMore.on('click', function() {
-		popup.addClass('is-open');
-		OffScroll ();
-		if (!(popupSlider.hasClass('slick-initialized'))) {
-			popupSlider.slick({
-				slidesToShow: 1,
-				slidesToScroll: 1,
-				arrows: true,
-				dots: false,
-				autoplay: false
-			});
+			HideShow(tabBl, blActive, tab, $(this) );
+			OnSlick(blActive, 2 , (0));
 		}
-
+		else {
+			// tabBl.slick('unslick');
+			OnSlick(blActive, 2 , (index-1));
+		};
+		e.preventDefault();
 	});
 
+	btnMore.on('mousedown', function(e, slick) {
+		var currentTabBl = $(this).closest(tabBl);
 
+		if (!(popupSlider.hasClass('slick-initialized'))) {
+
+			$.getJSON('data.json', function(data) {
+				$.each(data, function(i, obj) {
+					if ( currentTabBl.data("number") == obj.tab) {
+
+						var ul = [];
+						var list = obj.list;
+
+						for (var txt in list) {
+							var li = ("<li>"+ list[txt] +"</li>");
+									ul.push(li);
+						};
+
+						popupSlider.append( "<div class='popup-slider__item .js-popup-slide'>"+
+																"<div class='popup-slider__txt'>"+
+																"<h4>"+ obj.title +"</h4>"+
+																"<ul>"+ ul.join('') +"</ul>"+
+																"<p>"+ obj.paragraph +"</p>"+
+																"<span>"+ obj.date +" "+ obj.author +"</span>"+
+																"</div><div class='popup-slider__img'>"+
+																"<img src='"+ obj.url +"' alt='"+ obj.alt +"'"+
+																"width='300' height='375'/></div>"+
+																"</div>");
+					};
+				});
+			});
+		} else { popupSlider.slick('unslick') };
+	});
+
+	popupSlider.on('init reInit afterChange', function(event, slick){
+		var i = popupSlider.find('.slick-current').data('slick-index')
+		count.text((i+1) + ' / ' + slick.slideCount);
+	});
+
+	btnMore.on('click', function(e) {
+		index = $(this).closest(slide).data('slide');
+		popup.addClass('is-open');
+		OnSlick(popupSlider, 1 , (index-1));
+		OffScroll ();
+		e.preventDefault();
+	});
 
 	popup.on('click', function(e) {
 		if ($(e.target).closest(popupSlider).length === 0) {
-			popup.removeClass('is-open');
-			$(window).unbind('scroll'); //Выключить отмену прокрутки
-			popupSlide.remove();
+			ClosePopup(popup);
 		}
 	});
 
-	function OffScroll () {
-		var winScrollTop = $(window).scrollTop();
-		$(window).on('scroll',function () {
-			$(window).scrollTop(winScrollTop);
-	});}
+	btnClose.on('click', function() {
+		ClosePopup(popup);
+	});
 
+// =include all-fun.js
 
 });
